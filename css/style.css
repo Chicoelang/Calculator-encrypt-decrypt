@@ -588,6 +588,7 @@ body.dark-mode .enigma-input:focus {
     gap: 8px;
 }
 
+/* Playfair Cell - Read Only (Preview) */
 .playfair-cell {
     width: 60px;
     height: 60px;
@@ -615,13 +616,49 @@ body.dark-mode .playfair-cell:hover {
     background: #88a6ff;
 }
 
+/* Playfair Cell - Editable (Input) */
+.playfair-cell-editable {
+    width: 60px;
+    height: 60px;
+    font-size: 1.5em;
+    font-weight: 700;
+    text-align: center;
+    color: var(--text-color);
+    background: var(--input-bg);
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    transition: var(--transition);
+    cursor: text;
+}
+
+.playfair-cell-editable:focus {
+    outline: none;
+    border-color: #48bb78;
+    background: rgba(72, 187, 120, 0.1);
+    transform: scale(1.05);
+    box-shadow: 0 0 0 3px rgba(72, 187, 120, 0.2);
+    z-index: 10;
+}
+
+body.dark-mode .playfair-cell-editable:focus {
+    border-color: #68d391;
+    background: rgba(104, 211, 145, 0.1);
+    box-shadow: 0 0 0 3px rgba(104, 211, 145, 0.1);
+}
+
+.playfair-cell-editable:hover:not(:focus) {
+    border-color: #48bb78;
+    transform: scale(1.02);
+}
+
 /* Responsive untuk Playfair matrix */
 @media (max-width: 768px) {
     .playfair-matrix-grid {
         gap: 6px;
     }
     
-    .playfair-cell {
+    .playfair-cell,
+    .playfair-cell-editable {
         width: 50px;
         height: 50px;
         font-size: 1.3em;
@@ -637,7 +674,8 @@ body.dark-mode .playfair-cell:hover {
         gap: 5px;
     }
     
-    .playfair-cell {
+    .playfair-cell,
+    .playfair-cell-editable {
         width: 45px;
         height: 45px;
         font-size: 1.2em;

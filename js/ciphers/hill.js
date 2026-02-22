@@ -1,7 +1,6 @@
 // Hill Cipher - Menggunakan matriks 2x2
 
 const HillCipher = {
-    // Parse kunci menjadi matriks 2x2
     parseKey: function(key) {
         let numbers = key.replace(/[^0-9,\s]/g, '').split(/[,\s]+/).filter(n => n);
         
@@ -14,7 +13,6 @@ const HillCipher = {
             [parseInt(numbers[2]), parseInt(numbers[3])]
         ];
         
-        // Cek determinan
         let det = this.determinant(matrix);
         if (this.gcd(det, 26) !== 1) {
             throw new Error("Determinan matriks harus relatif prima dengan 26! Coba kunci lain.");
@@ -23,7 +21,6 @@ const HillCipher = {
         return matrix;
     },
 
-    // Hitung determinan matriks 2x2
     determinant: function(matrix) {
         return (matrix[0][0] * matrix[1][1] - matrix[0][1] * matrix[1][0]) % 26;
     },
@@ -40,7 +37,6 @@ const HillCipher = {
         return a;
     },
 
-    // Modular inverse
     modInverse: function(a, m) {
         a = ((a % m) + m) % m;
         for (let x = 1; x < m; x++) {
@@ -63,7 +59,6 @@ const HillCipher = {
         ];
     },
 
-    // Kali matriks dengan vektor
     multiplyMatrixVector: function(matrix, vector) {
         return [
             (matrix[0][0] * vector[0] + matrix[0][1] * vector[1]) % 26,
@@ -71,7 +66,6 @@ const HillCipher = {
         ];
     },
 
-    // Enkripsi teks menggunakan Hill Cipher
     encrypt: function(plaintext, key) {
         if (!plaintext || !key) {
             throw new Error("Teks dan kunci tidak boleh kosong!");
@@ -112,7 +106,7 @@ const HillCipher = {
         
         ciphertext = ciphertext.toUpperCase().replace(/[^A-Z]/g, '');
         
-        // Tambahkan X jika panjang ganjil
+
         if (ciphertext.length % 2 !== 0) {
             ciphertext += 'X';
         }
@@ -133,12 +127,10 @@ const HillCipher = {
         return result;
     },
 
-    // Deskripsi cipher
     getDescription: function() {
         return "Hill Cipher menggunakan matriks 2x2 untuk enkripsi. Determinan matriks harus relatif prima dengan 26. Contoh kunci: 6,24,1,13 atau 3,3,2,5.";
     },
 
-    // Info bantuan untuk kunci
     getKeyHelp: function() {
         return "Masukkan 4 angka untuk matriks 2x2: a,b,c,d (contoh: 6,24,1,13). Determinan harus relatif prima dengan 26.";
     }

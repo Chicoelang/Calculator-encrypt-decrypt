@@ -10,7 +10,6 @@ const VigenereCipher = {
         let result = "";
         let keyIndex = 0;
         
-        // Bersihkan dan ubah ke huruf besar
         plaintext = plaintext.toUpperCase();
         key = key.toUpperCase().replace(/[^A-Z]/g, '');
         
@@ -33,7 +32,6 @@ const VigenereCipher = {
                 
                 keyIndex++;
             } else {
-                // Biarkan karakter selain huruf tetap sama
                 result += char;
             }
         }
@@ -50,7 +48,6 @@ const VigenereCipher = {
         let result = "";
         let keyIndex = 0;
         
-        // Bersihkan dan ubah ke huruf besar
         ciphertext = ciphertext.toUpperCase();
         key = key.toUpperCase().replace(/[^A-Z]/g, '');
         
@@ -73,7 +70,6 @@ const VigenereCipher = {
                 
                 keyIndex++;
             } else {
-                // Biarkan karakter selain huruf tetap sama
                 result += char;
             }
         }
@@ -81,12 +77,12 @@ const VigenereCipher = {
         return result;
     },
 
-    // Deskripsi cipher
+  
     getDescription: function() {
         return "Vigenere Cipher menggunakan 26 huruf alfabet (A-Z). Setiap huruf plaintext digeser sesuai dengan huruf kunci yang berulang. Contoh: Plaintext 'HELLO' dengan kunci 'KEY' akan menghasilkan 'RIJVS'.";
     },
 
-    // Info bantuan untuk kunci
+    
     getKeyHelp: function() {
         return "Masukkan kata kunci (hanya huruf A-Z). Contoh: KEY, SECRET, CRYPTO";
     }

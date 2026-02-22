@@ -11,7 +11,6 @@ const AffineCipher = {
         return a;
     },
 
-    // Fungsi untuk mencari modular inverse
     modInverse: function(a, m) {
         a = a % m;
         for (let x = 1; x < m; x++) {
@@ -22,7 +21,6 @@ const AffineCipher = {
         return 1;
     },
 
-    // Parse kunci (format: "a,b" atau "a b")
     parseKey: function(key) {
         let parts = key.replace(/\s+/g, ',').split(',');
         if (parts.length !== 2) {
@@ -70,7 +68,6 @@ const AffineCipher = {
         return result;
     },
 
-    // Dekripsi teks menggunakan Affine Cipher
     decrypt: function(ciphertext, key) {
         if (!ciphertext || !key) {
             throw new Error("Teks dan kunci tidak boleh kosong!");
@@ -103,7 +100,6 @@ const AffineCipher = {
         return "Affine Cipher menggunakan fungsi matematika E(x) = (ax + b) mod 26. Nilai 'a' harus relatif prima dengan 26. Contoh kunci: 5,8 atau 7,3.";
     },
 
-    // Info bantuan untuk kunci
     getKeyHelp: function() {
         return "Masukkan kunci dalam format: a,b (contoh: 5,8). Nilai 'a' yang valid: 1,3,5,7,9,11,15,17,19,21,23,25";
     }

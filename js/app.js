@@ -1,4 +1,4 @@
-// App.js - Logika utama aplikasi
+
 
 // Object untuk menyimpan semua cipher
 const ciphers = {
@@ -16,7 +16,7 @@ let darkModeToggle, keySection, affineKeySection, affineA, affineB, affineKeyHel
 let hillKeySection, hillA, hillB, hillC, hillD, hillKeyHelp;
 let enigmaKeySection, enigmaRotor1, enigmaRotor2, enigmaRotor3;
 let enigmaPos1, enigmaPos2, enigmaPos3, enigmaKeyHelp;
-let playfairMatrixSection, playfairMatrix;
+let playfairMatrixSection, playfairMatrix, playfairEditableSection, playfairEditableMatrix;
 
 // Inisialisasi aplikasi
 document.addEventListener('DOMContentLoaded', function() {
@@ -28,6 +28,8 @@ document.addEventListener('DOMContentLoaded', function() {
     keySection = document.getElementById('key-section');
     playfairMatrixSection = document.getElementById('playfair-matrix-section');
     playfairMatrix = document.getElementById('playfair-matrix');
+    playfairEditableSection = document.getElementById('playfair-editable-section');
+    playfairEditableMatrix = document.getElementById('playfair-editable-matrix');
     affineKeySection = document.getElementById('affine-key-section');
     affineA = document.getElementById('affine-a');
     affineB = document.getElementById('affine-b');
@@ -66,14 +68,83 @@ document.addEventListener('DOMContentLoaded', function() {
     // Set informasi awal
     updateCipherInfo();
     
-    // Load dark mode preference
+
     loadDarkModePreference();
 });
 
+// Initialize Playfair editable matrix
+// CATATAN: Matriks ini bisa DIEDIT oleh user
+function initPlayfairEditableMatrix() {
+    if (cipherSelect.value !== 'playfair') return;
+    
+    const key = keyInput.value || 'PLAYFAIR';
+    
+    try {
+        // Generate matrix default dari kunci
+        const matrix = PlayfairCipher.createMatrix(key);
+        
+        playfairEditableMatrix.innerHTML = '';
+        
+        // Buat grid 5x5 yang EDITABLE
+        for (let i = 0; i < 5; i++) {
+            for (let j = 0; j < 5; j++) {
+                const cell = document.createElement('input');
+                cell.type = 'text';
+                cell.className = 'playfair-cell-editable';
+                cell.maxLength = 1;
+                cell.value = matrix[i][j];
+                cell.dataset.row = i;
+                cell.dataset.col = j;
+                
+                // Event: ketika user edit cell, update kunci
+                cell.addEventListener('input', function(e) {
+                    // Hanya terima huruf A-Z
+                    this.value = this.value.toUpperCase().replace(/[^A-Z]/g, '');
+                    // Update kunci dari matriks editable
+                    updateKeyFromEditableMatrix();
+                });
+                
+                // Auto-focus ke cell berikutnya setelah ketik
+                cell.addEventListener('keyup', function(e) {
+                    if (this.value && e.key !== 'Backspace' && e.key !== 'Delete') {
+                        const nextInput = this.nextElementSibling;
+                        if (nextInput && nextInput.tagName === 'INPUT') {
+                            nextInput.focus();
+                            nextInput.select();
+                        }
+                    }
+                });
+                
+                playfairEditableMatrix.appendChild(cell);
+            }
+        }
+    } catch (error) {
+        playfairEditableMatrix.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: #f56565;">Error</div>';
+    }
+}
+
+// Update keyInput dari editable matrix
+function updateKeyFromEditableMatrix() {
+    const cells = playfairEditableMatrix.querySelectorAll('.playfair-cell-editable');
+    let matrixString = '';
+    
+    cells.forEach(cell => {
+        if (cell.value) {
+            matrixString += cell.value;
+        }
+    });
+    
+    // Update input kunci dengan huruf unik dari matriks
+    // Remove duplicates untuk mendapatkan kunci
+    let uniqueChars = [...new Set(matrixString)].join('');
+    keyInput.value = uniqueChars;
+    
+    // Update preview matriks
+    updatePlayfairMatrix();
+}
+
 // Update Playfair matrix visualization
 // CATATAN: Matriks ini HANYA untuk VISUALISASI/TAMPILAN saja
-// Fungsi: Menampilkan bagaimana kata kunci diubah menjadi matriks 5x5
-// Enkripsi/dekripsi tetap menggunakan input keyInput (bukan dari visual ini)
 function updatePlayfairMatrix() {
     if (cipherSelect.value !== 'playfair') return;
     
@@ -84,7 +155,6 @@ function updatePlayfairMatrix() {
         // Matrix ini dibuat otomatis dari kata kunci yang diketik user
         const matrix = PlayfairCipher.createMatrix(key);
         
-        // Hapus konten lama
         playfairMatrix.innerHTML = '';
         
         // Buat grid 5x5 untuk VISUALISASI
@@ -94,7 +164,6 @@ function updatePlayfairMatrix() {
                 const cell = document.createElement('div');
                 cell.className = 'playfair-cell';
                 cell.textContent = matrix[i][j];
-                // Cell ini read-only (hanya tampilan)
                 playfairMatrix.appendChild(cell);
             }
         }
@@ -109,12 +178,12 @@ function updateCipherInfo() {
     const cipher = ciphers[selectedCipher];
     
     if (cipher) {
-        // Update deskripsi
         cipherDescription.textContent = cipher.getDescription();
         
         // Sembunyikan semua input khusus terlebih dahulu
         keySection.style.display = 'none';
         playfairMatrixSection.style.display = 'none';
+        playfairEditableSection.style.display = 'none';
         affineKeySection.style.display = 'none';
         hillKeySection.style.display = 'none';
         enigmaKeySection.style.display = 'none';
@@ -131,8 +200,10 @@ function updateCipherInfo() {
             enigmaKeyHelp.textContent = cipher.getKeyHelp();
         } else if (selectedCipher === 'playfair') {
             keySection.style.display = 'block';
+            playfairEditableSection.style.display = 'block';
             playfairMatrixSection.style.display = 'block';
             keyHelp.textContent = cipher.getKeyHelp();
+            initPlayfairEditableMatrix();
             updatePlayfairMatrix();
         } else {
             keySection.style.display = 'block';
@@ -261,7 +332,7 @@ function handleDecrypt() {
     }
 }
 
-// Handle clear/bersihkan
+// Handle clear
 function handleClear() {
     inputText.value = '';
     keyInput.value = '';
@@ -295,13 +366,11 @@ function handleCopy() {
 
 // Tampilkan pesan error
 function showError(message) {
-    // Gunakan alert sederhana
     alert('❌ Error: ' + message);
 }
 
 // Tampilkan pesan sukses
 function showSuccess(message) {
-    // Buat notifikasi sederhana
     const notification = document.createElement('div');
     notification.className = 'notification success';
     notification.textContent = '✅ ' + message;
@@ -320,14 +389,12 @@ function showSuccess(message) {
     
     document.body.appendChild(notification);
     
-    // Hapus setelah 3 detik
     setTimeout(() => {
         notification.style.animation = 'slideOut 0.3s ease-out';
         setTimeout(() => notification.remove(), 300);
     }, 3000);
 }
 
-// Tambahkan animasi CSS secara dinamis
 const style = document.createElement('style');
 style.textContent = `
     @keyframes slideIn {
@@ -354,31 +421,22 @@ style.textContent = `
 `;
 document.head.appendChild(style);
 
-// ============================================
-// DARK MODE FUNCTIONALITY
-// ============================================
-
 // Toggle dark mode
 function toggleDarkMode() {
     document.body.classList.toggle('dark-mode');
     
-    // Simpan preferensi ke localStorage
     const isDarkMode = document.body.classList.contains('dark-mode');
     localStorage.setItem('darkMode', isDarkMode ? 'enabled' : 'disabled');
     
-    // Tampilkan notifikasi
     if (isDarkMode) {
         showSuccess('Dark Mode diaktifkan! 🌙');
     } else {
         showSuccess('Light Mode diaktifkan! ☀️');
     }
 }
-
-// Load dark mode preference dari localStorage
 function loadDarkModePreference() {
     const darkModePreference = localStorage.getItem('darkMode');
     
-    // Jika user pernah pilih dark mode, aktifkan
     if (darkModePreference === 'enabled') {
         document.body.classList.add('dark-mode');
     }

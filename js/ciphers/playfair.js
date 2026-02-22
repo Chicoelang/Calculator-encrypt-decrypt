@@ -1,7 +1,6 @@
 // Playfair Cipher - Menggunakan 26 huruf alfabet
 
 const PlayfairCipher = {
-    // Buat matriks 5x5 dari kunci (J digabung dengan I)
     createMatrix: function(key) {
         key = key.toUpperCase().replace(/[^A-Z]/g, '');
         
@@ -11,7 +10,7 @@ const PlayfairCipher = {
         
         let matrix = [];
         let used = new Set();
-        let keyString = key + 'ABCDEFGHIKLMNOPQRSTUVWXYZ'; // J dihilangkan, diganti I
+        let keyString = key + 'ABCDEFGHIKLMNOPQRSTUVWXYZ';
         
         for (let char of keyString) {
             if (char === 'J') char = 'I'; // J = I
@@ -22,7 +21,6 @@ const PlayfairCipher = {
             if (matrix.length === 25) break;
         }
         
-        // Ubah jadi matriks 5x5
         let matrix5x5 = [];
         for (let i = 0; i < 5; i++) {
             matrix5x5.push(matrix.slice(i * 5, (i + 1) * 5));
@@ -44,7 +42,6 @@ const PlayfairCipher = {
         return null;
     },
 
-    // Buat pasangan huruf (digraph)
     createPairs: function(text) {
         text = text.toUpperCase().replace(/[^A-Z]/g, '');
         let pairs = [];
@@ -56,7 +53,7 @@ const PlayfairCipher = {
             // Jika kedua huruf sama, sisipkan X
             if (first === second) {
                 second = 'X';
-                i--; // Mundur satu untuk proses huruf yang sama lagi
+                i--; 
             }
             
             pairs.push(first + second);
@@ -90,7 +87,6 @@ const PlayfairCipher = {
                 result += matrix[(pos1.row + 1) % 5][pos1.col];
                 result += matrix[(pos2.row + 1) % 5][pos2.col];
             } else {
-                // Buat persegi panjang: tukar kolom
                 result += matrix[pos1.row][pos2.col];
                 result += matrix[pos2.row][pos1.col];
             }
@@ -99,7 +95,6 @@ const PlayfairCipher = {
         return result;
     },
 
-    // Dekripsi teks menggunakan Playfair Cipher
     decrypt: function(ciphertext, key) {
         if (!ciphertext || !key) {
             throw new Error("Teks dan kunci tidak boleh kosong!");
@@ -130,7 +125,6 @@ const PlayfairCipher = {
                 result += matrix[(pos1.row - 1 + 5) % 5][pos1.col];
                 result += matrix[(pos2.row - 1 + 5) % 5][pos2.col];
             } else {
-                // Buat persegi panjang: tukar kolom
                 result += matrix[pos1.row][pos2.col];
                 result += matrix[pos2.row][pos1.col];
             }
@@ -139,12 +133,10 @@ const PlayfairCipher = {
         return result;
     },
 
-    // Deskripsi cipher
     getDescription: function() {
         return "Playfair Cipher menggunakan matriks 5x5 dari 26 huruf alfabet (J digabung dengan I). Teks dienkripsi berpasangan. Contoh kunci: PLAYFAIR, MONARCHY.";
     },
 
-    // Info bantuan untuk kunci
     getKeyHelp: function() {
         return "Masukkan kata kunci (hanya huruf A-Z). Huruf J akan dianggap sama dengan I. Contoh: PLAYFAIR, SECRET";
     }

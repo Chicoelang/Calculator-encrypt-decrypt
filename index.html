@@ -45,16 +45,29 @@
                 <div id="key-help" class="help-text"></div>
             </div>
 
-            <!-- Visualisasi Matriks Playfair 5x5 -->
+            <!-- Matriks Playfair Editable (Input) -->
+            <div class="section" id="playfair-editable-section" style="display: none;">
+                <label>Edit Matriks 5×5 (Opsional):</label>
+                <div class="playfair-matrix-container">
+                    <div class="playfair-matrix-grid" id="playfair-editable-matrix">
+                        <!-- Matrix editable akan di-generate oleh JavaScript -->
+                    </div>
+                </div>
+                <div class="help-text" style="margin-top: 12px; text-align: center;">
+                    ✏️ Klik dan edit cell untuk mengubah matriks - Otomatis update ke kunci
+                </div>
+            </div>
+
+            <!-- Visualisasi Matriks Playfair 5x5 (Auto) -->
             <div class="section" id="playfair-matrix-section" style="display: none;">
-                <label>Matriks Playfair 5×5 dari Kunci:</label>
+                <label>Preview Matriks dari Kunci:</label>
                 <div class="playfair-matrix-container">
                     <div class="playfair-matrix-grid" id="playfair-matrix">
                         <!-- Matrix akan di-generate oleh JavaScript -->
                     </div>
                 </div>
                 <div class="help-text" style="margin-top: 12px; text-align: center;">
-                    Matriks dibuat otomatis dari kata kunci (J = I)
+                    👁️ Preview otomatis dari kata kunci (J = I)
                 </div>
             </div>
 
