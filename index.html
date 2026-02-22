@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator Enkripsi-Dekripsi</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Dark Mode Toggle -->
+    <button id="dark-mode-toggle" class="dark-mode-toggle" aria-label="Toggle Dark Mode">
+        <span class="icon-sun">☀️</span>
+        <span class="icon-moon">🌙</span>
+    </button>
+
+    <div class="container">
+        <header>
+            <h1>🔐 Kalkulator Enkripsi-Dekripsi</h1>
+            <p>Pilih metode cipher dan masukkan teks Anda</p>
+        </header>
+
+        <div class="main-content">
+            <!-- Pilihan Cipher -->
+            <div class="section">
+                <label for="cipher-select">Pilih Metode Cipher:</label>
+                <select id="cipher-select">
+                    <option value="vigenere">Vigenere Cipher (26 huruf alfabet)</option>
+                    <option value="affine">Affine Cipher</option>
+                    <option value="playfair">Playfair Cipher (26 huruf alfabet)</option>
+                    <option value="hill">Hill Cipher</option>
+                    <option value="enigma">Enigma Cipher</option>
+                </select>
+            </div>
+
+            <!-- Input Teks -->
+            <div class="section">
+                <label for="input-text">Masukkan Teks:</label>
+                <textarea id="input-text" rows="4" placeholder="Ketik teks di sini..."></textarea>
+            </div>
+
+            <!-- Input Kunci -->
+            <div class="section" id="key-section">
+                <label for="key-input">Masukkan Kunci:</label>
+                <input type="text" id="key-input" placeholder="Masukkan kunci...">
+                <div id="key-help" class="help-text"></div>
+            </div>
+
+            <!-- Visualisasi Matriks Playfair 5x5 -->
+            <div class="section" id="playfair-matrix-section" style="display: none;">
+                <label>Matriks Playfair 5×5 dari Kunci:</label>
+                <div class="playfair-matrix-container">
+                    <div class="playfair-matrix-grid" id="playfair-matrix">
+                        <!-- Matrix akan di-generate oleh JavaScript -->
+                    </div>
+                </div>
+                <div class="help-text" style="margin-top: 12px; text-align: center;">
+                    Matriks dibuat otomatis dari kata kunci (J = I)
+                </div>
+            </div>
+
+            <!-- Input Kunci Affine (a dan b terpisah) -->
+            <div class="section" id="affine-key-section" style="display: none;">
+                <label>Masukkan Kunci Affine:</label>
+                <div class="affine-inputs-grid">
+                    <div class="affine-input-group">
+                        <label for="affine-a">Nilai a:</label>
+                        <input type="number" id="affine-a" class="affine-input" placeholder="Contoh: 5">
+                        <div class="help-text">Harus relatif prima dengan 26</div>
+                    </div>
+                    <div class="affine-input-group">
+                        <label for="affine-b">Nilai b:</label>
+                        <input type="number" id="affine-b" class="affine-input" placeholder="Contoh: 8">
+                        <div class="help-text">Bilangan bulat 0-25</div>
+                    </div>
+                </div>
+                <div id="affine-key-help" class="help-text" style="margin-top: 10px;"></div>
+            </div>
+
+            <!-- Input Kunci Hill (Matriks 2x2) -->
+            <div class="section" id="hill-key-section" style="display: none;">
+                <label>Masukkan Matriks Kunci 2×2:</label>
+                <div class="hill-matrix-container">
+                    <div class="matrix-bracket left">[</div>
+                    <div class="hill-matrix-grid">
+                        <input type="number" id="hill-a" class="hill-input" placeholder="a">
+                        <input type="number" id="hill-b" class="hill-input" placeholder="b">
+                        <input type="number" id="hill-c" class="hill-input" placeholder="c">
+                        <input type="number" id="hill-d" class="hill-input" placeholder="d">
+                    </div>
+                    <div class="matrix-bracket right">]</div>
+                </div>
+                <div class="help-text" style="margin-top: 12px; text-align: center;">
+                    Contoh: a=6, b=24, c=1, d=13 | Determinan harus relatif prima dengan 26
+                </div>
+                <div id="hill-key-help" class="help-text" style="margin-top: 8px;"></div>
+            </div>
+
+            <!-- Input Kunci Enigma (3 Rotor) -->
+            <div class="section" id="enigma-key-section" style="display: none;">
+                <label>Konfigurasi 3 Rotor Enigma:</label>
+                <div class="enigma-rotors-container">
+                    <!-- Rotor 1 -->
+                    <div class="enigma-rotor-group">
+                        <div class="rotor-label">Rotor 1</div>
+                        <label for="enigma-rotor1">Nomor:</label>
+                        <select id="enigma-rotor1" class="enigma-select">
+                            <option value="1">I</option>
+                            <option value="2">II</option>
+                            <option value="3">III</option>
+                        </select>
+                        <label for="enigma-pos1" style="margin-top: 10px;">Posisi Awal:</label>
+                        <input type="number" id="enigma-pos1" class="enigma-input" placeholder="0-25" min="0" max="25" value="0">
+                    </div>
+                    
+                    <!-- Rotor 2 -->
+                    <div class="enigma-rotor-group">
+                        <div class="rotor-label">Rotor 2</div>
+                        <label for="enigma-rotor2">Nomor:</label>
+                        <select id="enigma-rotor2" class="enigma-select">
+                            <option value="1">I</option>
+                            <option value="2" selected>II</option>
+                            <option value="3">III</option>
+                        </select>
+                        <label for="enigma-pos2" style="margin-top: 10px;">Posisi Awal:</label>
+                        <input type="number" id="enigma-pos2" class="enigma-input" placeholder="0-25" min="0" max="25" value="0">
+                    </div>
+                    
+                    <!-- Rotor 3 -->
+                    <div class="enigma-rotor-group">
+                        <div class="rotor-label">Rotor 3</div>
+                        <label for="enigma-rotor3">Nomor:</label>
+                        <select id="enigma-rotor3" class="enigma-select">
+                            <option value="1">I</option>
+                            <option value="2">II</option>
+                            <option value="3" selected>III</option>
+                        </select>
+                        <label for="enigma-pos3" style="margin-top: 10px;">Posisi Awal:</label>
+                        <input type="number" id="enigma-pos3" class="enigma-input" placeholder="0-25" min="0" max="25" value="0">
+                    </div>
+                </div>
+                <div class="help-text" style="margin-top: 12px; text-align: center;">
+                    Pilih nomor rotor (I, II, III) dan posisi awal (0-25) untuk setiap rotor
+                </div>
+                <div id="enigma-key-help" class="help-text" style="margin-top: 8px;"></div>
+            </div>
+
+            <!-- Tombol Aksi -->
+            <div class="button-group">
+                <button id="encrypt-btn" class="btn btn-primary">🔒 Enkripsi</button>
+                <button id="decrypt-btn" class="btn btn-secondary">🔓 Dekripsi</button>
+                <button id="clear-btn" class="btn btn-clear">🗑️ Bersihkan</button>
+            </div>
+
+            <!-- Output Hasil -->
+            <div class="section">
+                <label for="output-text">Hasil:</label>
+                <textarea id="output-text" rows="4" readonly placeholder="Hasil akan muncul di sini..."></textarea>
+                <button id="copy-btn" class="btn btn-copy">📋 Salin Hasil</button>
+            </div>
+
+            <!-- Informasi Cipher -->
+            <div class="info-section" id="cipher-info">
+                <h3>Informasi Cipher</h3>
+                <p id="cipher-description"></p>
+            </div>
+        </div>
+
+        <footer>
+            <p>© 2026 Kalkulator Enkripsi-Dekripsi | Kriptografi</p>
+        </footer>
+    </div>
+
+    <!-- Load JavaScript Files -->
+    <script src="js/ciphers/vigenere.js"></script>
+    <script src="js/ciphers/affine.js"></script>
+    <script src="js/ciphers/playfair.js"></script>
+    <script src="js/ciphers/hill.js"></script>
+    <script src="js/ciphers/enigma.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
