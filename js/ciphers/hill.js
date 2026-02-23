@@ -5,7 +5,7 @@ const HillCipher = {
         let numbers = key.replace(/[^0-9,\s]/g, '').split(/[,\s]+/).filter(n => n);
         
         if (numbers.length !== 4) {
-            throw new Error("Kunci harus 4 angka untuk matriks 2x2! Format: a,b,c,d (contoh: 6,24,1,13)");
+            throw new Error("Kunci harus 4 angka untuk matriks 2x2! Format: a,b,c,d (contoh: 3,3,2,5)");
         }
         
         let matrix = [
@@ -128,10 +128,10 @@ const HillCipher = {
     },
 
     getDescription: function() {
-        return "Hill Cipher menggunakan matriks 2x2 untuk enkripsi. Determinan matriks harus relatif prima dengan 26. Contoh kunci: 6,24,1,13 atau 3,3,2,5.";
+        return "Hill Cipher menggunakan matriks 2x2 untuk enkripsi. Determinan matriks harus relatif prima dengan 26. Contoh kunci: 3,3,2,5 atau 2,3,1,4 atau 5,8,17,3.";
     },
 
     getKeyHelp: function() {
-        return "Masukkan 4 angka untuk matriks 2x2: a,b,c,d (contoh: 6,24,1,13). Determinan harus relatif prima dengan 26.";
+        return "Masukkan 4 angka untuk matriks 2x2: a,b,c,d (contoh: 3,3,2,5). Determinan harus relatif prima dengan 26.";
     }
 };
