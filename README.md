@@ -109,7 +109,7 @@ Aplikasi dilengkapi dengan **Dark Mode** untuk kenyamanan mata:
 **Format Kunci**: `a,b,c,d` untuk matriks [[a,b],[c,d]]
 
 **Contoh**:
-- Kunci: `6,24,1,13`
+- Kunci: `3,3,2,5`
 - Plaintext: `HELP`
 - Ciphertext: `ZEBU` (contoh)
 
@@ -119,7 +119,6 @@ Aplikasi dilengkapi dengan **Dark Mode** untuk kenyamanan mata:
 - Teks diproses berpasangan
 
 **Contoh kunci yang valid**:
-- `6,24,1,13`
 - `3,3,2,5`
 - `5,8,17,3`
 
